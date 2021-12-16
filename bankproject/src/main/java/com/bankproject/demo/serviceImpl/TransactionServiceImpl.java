@@ -1,34 +1,100 @@
 package com.bankproject.demo.serviceImpl;
 
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bankproject.demo.dao.AccountDao;
+import com.bankproject.demo.dao.CustomerDao;
 import com.bankproject.demo.dao.TransactionDao;
-import com.bankproject.demo.dto.AccountDto;
+import com.bankproject.demo.dto.TransactionDto;
+import com.bankproject.demo.dto.TransactionResponseDto;
+import com.bankproject.demo.exception.EntryNotFoundException;
 import com.bankproject.demo.model.Account;
+import com.bankproject.demo.model.Transaction;
 import com.bankproject.demo.service.TransactionService;
 
-public class TransactionServiceImpl implements TransactionService{
+@Service
+public class TransactionServiceImpl implements TransactionService {
 	@Autowired
 	TransactionDao transactionDao;
 	@Autowired
 	AccountDao accountDao;
+	@Autowired
+	CustomerDao custDao;
 
-	@Override
-	
-	 public void debitOperation(long accountNumber, double balance) {
-	   // Account account = accountDao.findByAccountNumber(accountNumber);
-	    Account account = new Account();
-	    debitOperation( account.getAccountNumber(), balance);
-	 }
+	public TransactionResponseDto saveTransactions(TransactionDto transactionDto) throws EntryNotFoundException {
+		if (transactionDto.getFormAccountId().equals(transactionDto.getToAccountId()))
+			throw new EntryNotFoundException("sender's account and receivers cannot be same");
 
-	@Override
-	public void depositOperation(long accountNumber, double balance) {
-		
-		   Account account = transactionDao.findById(accountNumber);
-		   depositOperation(account.getAccountNumber(), balance);
-		 }
+		Optional<Account> fromAccount = accountDao.findById(transactionDto.getFormAccountId());
+		if (!fromAccount.isPresent())
+			throw new EntryNotFoundException("cannot find sender's account id");
+		Optional<Account> toAccount = accountDao.findById(transactionDto.getToAccountId());
+		if (!toAccount.isPresent())
+			throw new EntryNotFoundException("cannot find receiver's account id");
 
-		
+		Transaction debitTransaction = new Transaction();
+		debitTransaction.setAccount(fromAccount.get());
+		double availableAmountFromAccount = fromAccount.get().getBalance() - transactionDto.getTransactionedAmount();
+		debitTransaction.setAvailableBalance(availableAmountFromAccount);
+		debitTransaction.setTransactionDate(new Date());
+		debitTransaction.setTransactionType("debit");
+		debitTransaction.setTransactionedAmount(transactionDto.getTransactionedAmount());
+		String transactionNumber = "BANK" + getTransactionNumber() + "TR";
+		debitTransaction.setTransactionNumber(transactionNumber);
+		transactionDao.save(debitTransaction);
+
+		Transaction creditTransaction = saveCreditTransaction(transactionDto, transactionNumber, toAccount);
+
+		TransactionResponseDto transactionResponseDto = new TransactionResponseDto();
+		// BeanUtils.copyProperties(debitTransaction, transactionResponseDto);
+		transactionResponseDto.setFormAccountId(transactionDto.getFormAccountId());
+		transactionResponseDto.setAccountType(fromAccount.get().getAccountType());
+		transactionResponseDto.setAvailableBalance(fromAccount.get().getBalance());
+		// transactionResponseDto.setFromDate(debitTransaction.getTransactionDate());
+		transactionResponseDto.setToAccountId(transactionDto.getToAccountId());
+		transactionResponseDto.setAccountType(toAccount.get().getAccountType());
+		transactionResponseDto.setAvailableBalance(toAccount.get().getBalance());
+		// transactionResponseDto.setToDate(creditTransaction.getTransactionDate());
+		return transactionResponseDto;
+	}
+
+	public Transaction saveCreditTransaction(TransactionDto transactionRequestDto, String transactionNumber,
+			Optional<Account> toAccount) {
+		Transaction transaction = new Transaction();
+		transaction.setAccount(toAccount.get());
+		double availableAmountToAccount = toAccount.get().getBalance() + transactionRequestDto.getTransactionedAmount();
+		transaction.setAvailableBalance(availableAmountToAccount);
+		transaction.setTransactionDate(new Date());
+		transaction.setTransactionType("credit");
+		transaction.setTransactionedAmount(transactionRequestDto.getTransactionedAmount());
+		transaction.setTransactionNumber(transactionNumber);
+		transactionDao.save(transaction);
+		return transaction;
+	}
+
+	public long getTransactionNumber() {
+		/*
+		 * Transaction transaction = transactionDao.findFirstByOrderByDateDesc(); if
+		 * (transaction == null) { return 0; } String transactionNumber =
+		 * transaction.getTransactionNumber();
+		 * 
+		 * return Integer.parseInt(transactionNumber.substring(4,
+		 * transactionNumber.indexOf('T'))) + 1;
+		 */
+		return System.currentTimeMillis();
+	}
+
+	/*
+	 * @Override public List<TransactionResponseDto>
+	 * getAllTransactionByAccountId(Integer accountId) { List<Transaction>
+	 * transaction = transactionDao.getAllTransactionByAccountId(accountId); return
+	 * null; }
+	 */
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.bankproject.demo.dao.CustomerDao;
 import com.bankproject.demo.dto.CustomerDto;
 import com.bankproject.demo.dto.CustomerResponseDto;
+import com.bankproject.demo.model.Account;
 import com.bankproject.demo.model.Customer;
 import com.bankproject.demo.service.CustomerService;
 
@@ -28,6 +29,13 @@ public class CustomerServiceImpl implements CustomerService {
 	public void addCustomer(CustomerDto customerDto) {
 		Customer cust = new Customer();
 		BeanUtils.copyProperties(customerDto, cust);
+		List<Account> accounts = new ArrayList<Account>();
+		for(Account account: customerDto.getAccount())
+		{
+			account.setCustomer(cust);
+			accounts.add(account);
+		}
+		cust.setAccount(accounts);
 		//custom
 		customerDao.save(cust);
 	}

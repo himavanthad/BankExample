@@ -1,6 +1,7 @@
 package com.bankproject.demo.model;
 
-import java.sql.Date;
+import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -25,18 +28,19 @@ public class Transaction {
 	private Integer transactionId;
 	
 	@Column(name = "transaction_number")
-	private Integer transactionNumber;
+	private String transactionNumber;
 	
 	@Column(name = "transaction_amount")
-    private double amount;
+    private double transactionedAmount;
 	
 	@Column(name = "transaction_type")
 	private String transactionType;
 	
-	@Column(name = "transaction_from")
-	private Long  accountId;
+	@Column(name = "available_balance")
+	private Double availableBalance;
 	
 	@Column(name = "transaction_date")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date  transactionDate;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
@@ -52,20 +56,21 @@ public class Transaction {
 		this.transactionId = transactionId;
 	}
 
-	public Integer getTransactionNumber() {
+	
+	public String getTransactionNumber() {
 		return transactionNumber;
 	}
 
-	public void setTransactionNumber(Integer transactionNumber) {
+	public void setTransactionNumber(String transactionNumber) {
 		this.transactionNumber = transactionNumber;
 	}
 
-	public double getAmount() {
-		return amount;
+	public double getTransactionedAmount() {
+		return transactionedAmount;
 	}
 
-	public void setAmount(double amount) {
-		this.amount = amount;
+	public void setTransactionedAmount(double transactionedAmount) {
+		this.transactionedAmount = transactionedAmount;
 	}
 
 	public String getTransactionType() {
@@ -76,14 +81,15 @@ public class Transaction {
 		this.transactionType = transactionType;
 	}
 
-	public Long getAccountId() {
-		return accountId;
+	public Double getAvailableBalance() {
+		return availableBalance;
 	}
 
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
+	public void setAvailableBalance(Double availableBalance) {
+		this.availableBalance = availableBalance;
 	}
 
+	
 	public Date getTransactionDate() {
 		return transactionDate;
 	}
@@ -99,7 +105,5 @@ public class Transaction {
 	public void setAccount(Account account) {
 		this.account = account;
 	}
-	
-	
-	
+
 }

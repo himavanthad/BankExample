@@ -1,31 +1,48 @@
 package com.bankproject.demo.controller;
 
+import java.util.List;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bankproject.demo.dto.CustomerResponseDto;
+import com.bankproject.demo.dto.TransactionDto;
+import com.bankproject.demo.dto.TransactionResponseDto;
+import com.bankproject.demo.exception.EntryNotFoundException;
 import com.bankproject.demo.model.Account;
 import com.bankproject.demo.service.AccountService;
 import com.bankproject.demo.service.TransactionService;
 
-
+@RestController
 public class TransactionController {
-	
+
 	@Autowired
 	AccountService accountService;
-	
+
 	@Autowired
 	TransactionService transcService;
-	
-	@PostMapping("/debitOperation/{accountNumber}")
-	 void debitOperation(@PathVariable long accountNumber, @RequestBody Account account) {
-		transcService.debitOperation(accountNumber, account.getBalance());
-		  }
-	@PostMapping("/depositOperation/{accountNumber}")
-	 void depositOperation(@PathVariable long accountNumber, @RequestBody Account account) {
-		transcService.depositOperation(accountNumber, account.getBalance());
-	 }
 
+	@PostMapping("/transactions/save")
+	public ResponseEntity<TransactionResponseDto> saveTransactions(@Valid @RequestBody TransactionDto transactionRequestDto)
+			throws EntryNotFoundException {
+		TransactionResponseDto saveTransactions = transcService.saveTransactions(transactionRequestDto);
+		return new ResponseEntity<TransactionResponseDto>(saveTransactions, HttpStatus.ACCEPTED);
+	}
+	
+	/*
+	 * @GetMapping("/getAllTransactionByAccountId/{AccountId}") public
+	 * List<TransactionResponseDto> getAllTransactionByAccountId(@PathVariable
+	 * Integer accountId) { return (List<TransactionResponseDto>)
+	 * transcService.getAllTransactionByAccountId(accountId); }
+	 */
 }
