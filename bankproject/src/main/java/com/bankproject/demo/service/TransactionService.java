@@ -1,5 +1,6 @@
 package com.bankproject.demo.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -10,7 +11,9 @@ import com.bankproject.demo.exception.EntryNotFoundException;
 
 public interface TransactionService {
 
-	TransactionResponseDto saveTransactions(@Valid TransactionDto transactionRequestDto) throws EntryNotFoundException;
+	List<TransactionResponseDto> saveTransactions(@Valid TransactionDto transactionRequestDto) throws EntryNotFoundException;
+
+	List<TransactionResponseDto> getAllTransactionByFromAndToDates(Date from, Date to);
 
 	//List<TransactionResponseDto> getAllTransactionByAccountId(Integer accountId);
 
@@ -20,3 +23,4 @@ public interface TransactionService {
 //	void debitOperation(long accountNumber, double balance);
 
 }
+

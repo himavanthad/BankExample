@@ -43,8 +43,8 @@ public class AccountController {
 		return new ResponseEntity<AccountResponseDto>(account, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/accounts/{accountId}")
-	public AccountResponseDto getAccountDataById(@PathVariable Integer accountId) {
+	@GetMapping("/allTransactionByAccounts/{accountId}")
+	public AccountResponseDto getAllTransactionByAccounts(@PathVariable Integer accountId) {
 		return accountService.getAccountById(accountId);
 	}
 	

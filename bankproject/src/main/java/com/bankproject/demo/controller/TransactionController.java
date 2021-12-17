@@ -1,11 +1,13 @@
 package com.bankproject.demo.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bankproject.demo.dto.CustomerResponseDto;
+import com.bankproject.demo.dto.TransactionDatesDto;
 import com.bankproject.demo.dto.TransactionDto;
 import com.bankproject.demo.dto.TransactionResponseDto;
 import com.bankproject.demo.exception.EntryNotFoundException;
@@ -33,16 +36,16 @@ public class TransactionController {
 	TransactionService transcService;
 
 	@PostMapping("/transactions/save")
-	public ResponseEntity<TransactionResponseDto> saveTransactions(@Valid @RequestBody TransactionDto transactionRequestDto)
-			throws EntryNotFoundException {
-		TransactionResponseDto saveTransactions = transcService.saveTransactions(transactionRequestDto);
-		return new ResponseEntity<TransactionResponseDto>(saveTransactions, HttpStatus.ACCEPTED);
+	public ResponseEntity<List<TransactionResponseDto>> saveTransactions(
+			@Valid @RequestBody TransactionDto transactionRequestDto) throws EntryNotFoundException {
+		List<TransactionResponseDto> saveTransactions = transcService.saveTransactions(transactionRequestDto);
+		return new ResponseEntity<List<TransactionResponseDto>>(saveTransactions, HttpStatus.ACCEPTED);
 	}
-	
-	/*
-	 * @GetMapping("/getAllTransactionByAccountId/{AccountId}") public
-	 * List<TransactionResponseDto> getAllTransactionByAccountId(@PathVariable
-	 * Integer accountId) { return (List<TransactionResponseDto>)
-	 * transcService.getAllTransactionByAccountId(accountId); }
-	 */
+
+	@PostMapping("/getAllTransactionByAccountIdDates")
+	//@GetMapping("/getAllTransactionByAccountIdDates/{AccountId}")
+	public List<TransactionResponseDto> getAllTransactionByAccountId(@RequestBody TransactionDatesDto transactionDatesDto) {
+		return (List<TransactionResponseDto>) transcService.getAllTransactionByFromAndToDates(transactionDatesDto.getFromDate(), transactionDatesDto.getToDate());
+	}
+
 }

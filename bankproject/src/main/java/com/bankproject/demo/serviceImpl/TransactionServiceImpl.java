@@ -1,6 +1,7 @@
 package com.bankproject.demo.serviceImpl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Service;
 import com.bankproject.demo.dao.AccountDao;
 import com.bankproject.demo.dao.CustomerDao;
 import com.bankproject.demo.dao.TransactionDao;
+import com.bankproject.demo.dto.CustomerResponseDto;
 import com.bankproject.demo.dto.TransactionDto;
 import com.bankproject.demo.dto.TransactionResponseDto;
 import com.bankproject.demo.exception.EntryNotFoundException;
 import com.bankproject.demo.model.Account;
+import com.bankproject.demo.model.Customer;
 import com.bankproject.demo.model.Transaction;
 import com.bankproject.demo.service.TransactionService;
 
@@ -28,7 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Autowired
 	CustomerDao custDao;
 
-	public TransactionResponseDto saveTransactions(TransactionDto transactionDto) throws EntryNotFoundException {
+	public List<TransactionResponseDto> saveTransactions(TransactionDto transactionDto) throws EntryNotFoundException {
 		if (transactionDto.getFormAccountId().equals(transactionDto.getToAccountId()))
 			throw new EntryNotFoundException("sender's account and receivers cannot be same");
 
@@ -52,17 +55,27 @@ public class TransactionServiceImpl implements TransactionService {
 
 		Transaction creditTransaction = saveCreditTransaction(transactionDto, transactionNumber, toAccount);
 
-		TransactionResponseDto transactionResponseDto = new TransactionResponseDto();
-		// BeanUtils.copyProperties(debitTransaction, transactionResponseDto);
-		transactionResponseDto.setFormAccountId(transactionDto.getFormAccountId());
-		transactionResponseDto.setAccountType(fromAccount.get().getAccountType());
-		transactionResponseDto.setAvailableBalance(fromAccount.get().getBalance());
-		// transactionResponseDto.setFromDate(debitTransaction.getTransactionDate());
-		transactionResponseDto.setToAccountId(transactionDto.getToAccountId());
-		transactionResponseDto.setAccountType(toAccount.get().getAccountType());
-		transactionResponseDto.setAvailableBalance(toAccount.get().getBalance());
-		// transactionResponseDto.setToDate(creditTransaction.getTransactionDate());
-		return transactionResponseDto;
+		/*
+		 * TransactionResponseDto transactionResponseDto = new TransactionResponseDto();
+		 * // BeanUtils.copyProperties(debitTransaction, transactionResponseDto);
+		 * transactionResponseDto.setFormAccountId(transactionDto.getFormAccountId());
+		 * //transactionResponseDto.setAccountType(fromAccount.get().getAccountType());
+		 * transactionResponseDto.setAvailableBalance(fromAccount.get().getBalance());
+		 * // transactionResponseDto.setFromDate(debitTransaction.getTransactionDate());
+		 * transactionResponseDto.setToAccountId(transactionDto.getToAccountId());
+		 * //transactionResponseDto.setAccountType(toAccount.get().getAccountType());
+		 * transactionResponseDto.setAvailableBalance(toAccount.get().getBalance()); //
+		 * transactionResponseDto.setToDate(creditTransaction.getTransactionDate());
+		 */		
+		List<TransactionResponseDto> transactionResponseDtos = new ArrayList<TransactionResponseDto>();
+		TransactionResponseDto debitResponseDto = new TransactionResponseDto();
+		BeanUtils.copyProperties(debitTransaction, debitResponseDto);
+		TransactionResponseDto creditResponseDto = new TransactionResponseDto();
+		BeanUtils.copyProperties(creditTransaction, creditResponseDto);
+		transactionResponseDtos.add(debitResponseDto);
+		transactionResponseDtos.add(creditResponseDto);
+		return transactionResponseDtos;
+		 
 	}
 
 	public Transaction saveCreditTransaction(TransactionDto transactionRequestDto, String transactionNumber,
@@ -91,10 +104,17 @@ public class TransactionServiceImpl implements TransactionService {
 		return System.currentTimeMillis();
 	}
 
-	/*
-	 * @Override public List<TransactionResponseDto>
-	 * getAllTransactionByAccountId(Integer accountId) { List<Transaction>
-	 * transaction = transactionDao.getAllTransactionByAccountId(accountId); return
-	 * null; }
-	 */
+	@Override
+	public List<TransactionResponseDto> getAllTransactionByFromAndToDates(Date startDate, Date endDate) {
+		
+		List<TransactionResponseDto> transactionResponseDtos = new ArrayList<TransactionResponseDto>();
+		List<Transaction> allTransactionByFromAndToDates = transactionDao.findByTransactionDateBetween(startDate, endDate);
+		for(Transaction transaction : allTransactionByFromAndToDates) {
+			TransactionResponseDto responseDto = new TransactionResponseDto();
+			BeanUtils.copyProperties(transaction, responseDto);
+			transactionResponseDtos.add(responseDto);
+		}
+		return transactionResponseDtos;
+	}
+
 }
