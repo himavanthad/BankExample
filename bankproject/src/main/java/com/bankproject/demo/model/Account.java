@@ -22,6 +22,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.ManyToAny;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -45,7 +46,8 @@ public class Account {
 	private Customer customer;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = CascadeType.ALL)
-	private List<Transaction> Transaction = new ArrayList<Transaction>();
+	@JsonIgnore
+	private List<Transaction> transaction = new ArrayList<Transaction>();
 
 	@Column(name = "account_type")
 	private String accountType;
@@ -98,13 +100,12 @@ public class Account {
 	}
 
 	public List<Transaction> getTransaction() {
-		return Transaction;
+		return transaction;
 	}
 
 	public void setTransaction(List<Transaction> transaction) {
-		Transaction = transaction;
+		this.transaction = transaction;
 	}
-	
-	
+
 
 }

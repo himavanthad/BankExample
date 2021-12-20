@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bankproject.demo.dto.CustRespProjection;
 import com.bankproject.demo.dto.CustomerDto;
 import com.bankproject.demo.dto.CustomerResponseDto;
 import com.bankproject.demo.exception.CustomerNotFoundException;
@@ -50,12 +51,13 @@ public class CustomerController {
 	}
 
 	@GetMapping("/customers/allCustomersByName")
-	public List<CustomerResponseDto> getCustomerByName(
+	public List<CustRespProjection> getCustomerByName(
 			@NotEmpty(message = "name cannnot be empty") @RequestParam String custName) {
 		if (custName != null)
-			 customerService.getCustomerByName(custName);
+			 return customerService.getCustomerByName(custName);
 
-		return (List<CustomerResponseDto>) customerService.getAllCustomerData();
+		//return (List<CustomerResponseDto>) customerService.getAllCustomerData();
+		return null;
 	}
 
 	@GetMapping("/allCustomers")

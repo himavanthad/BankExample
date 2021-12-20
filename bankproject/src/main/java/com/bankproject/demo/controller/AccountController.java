@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bankproject.demo.dao.AccountDao;
 import com.bankproject.demo.dto.AccountDto;
+import com.bankproject.demo.dto.AccountRespClassProjection;
 import com.bankproject.demo.dto.AccountResponseDto;
+import com.bankproject.demo.dto.AccountResponseProjection;
 import com.bankproject.demo.dto.CustomerResponseDto;
 import com.bankproject.demo.exception.CustomerNotFoundException;
 import com.bankproject.demo.exception.ValidationErrorResponse;
@@ -46,6 +48,16 @@ public class AccountController {
 	@GetMapping("/allTransactionByAccounts/{accountId}")
 	public AccountResponseDto getAllTransactionByAccounts(@PathVariable Integer accountId) {
 		return accountService.getAccountById(accountId);
+	}
+	
+	@GetMapping("/allAccounts")
+	public List<AccountResponseProjection> getAllAccounts() {
+		return accountService.getAllAccounts();
+	}
+	
+	@GetMapping("/accounts/{accountNumber}")
+	public AccountRespClassProjection getAccountByAccountNumber(@PathVariable Long accountNumber) {
+		return accountService.getAccountByAccountNumber(accountNumber);
 	}
 	
 }

@@ -1,5 +1,6 @@
 package com.bankproject.demo.serviceImpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.bankproject.demo.dao.AccountDao;
 import com.bankproject.demo.dao.CustomerDao;
 import com.bankproject.demo.dto.AccountDto;
+import com.bankproject.demo.dto.AccountRespClassProjection;
 import com.bankproject.demo.dto.AccountResponseDto;
+import com.bankproject.demo.dto.AccountResponseProjection;
 import com.bankproject.demo.dto.CustomerResponseDto;
 import com.bankproject.demo.exception.CustomerNotFoundException;
 import com.bankproject.demo.model.Account;
@@ -52,6 +55,16 @@ public class AccountServiceImpl implements AccountService {
 			account = optionalAccount.get();
 		BeanUtils.copyProperties(account, accountResponseDto);
 		return accountResponseDto;
+	}
+
+	@Override
+	public List<AccountResponseProjection> getAllAccounts() {
+		return accountDao.findAllAccounts();
+	}
+
+	@Override
+	public AccountRespClassProjection getAccountByAccountNumber(Long accountNumber) {
+		return accountDao.findByAccountNumber(accountNumber);
 	}
 
 }

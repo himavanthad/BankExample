@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bankproject.demo.dao.CustomerDao;
+import com.bankproject.demo.dto.CustRespProjection;
 import com.bankproject.demo.dto.CustomerDto;
 import com.bankproject.demo.dto.CustomerResponseDto;
 import com.bankproject.demo.model.Account;
@@ -54,16 +55,17 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public List<CustomerResponseDto> getCustomerByName(String custName) {
+	public List<CustRespProjection> getCustomerByName(String custName) {
 		List<CustomerResponseDto> customerResponseList = new ArrayList<CustomerResponseDto>();
-		List<Customer> customerList = customerDao.findByCustNameLike(custName);
-		for(Customer customer : customerList) {
-			CustomerResponseDto responseDto = new CustomerResponseDto();
-			BeanUtils.copyProperties(customer, responseDto);
-			customerResponseList.add(responseDto);
-		}
+		List<CustRespProjection> customerList = customerDao.findByCustNameLike(custName);
+		/*
+		 * for(Customer customer : customerList) { CustomerResponseDto responseDto = new
+		 * CustomerResponseDto(); BeanUtils.copyProperties(customer, responseDto);
+		 * customerResponseList.add(responseDto); }
+		 */
 	
-		return customerResponseList;
+		//return customerResponseList;
+		return customerList;
 	}
 
 	@Override
