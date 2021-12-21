@@ -1,17 +1,14 @@
 package com.bankproject.demo.controller;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
+import javax.validation.constraints.NotEmpty;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +22,6 @@ import com.bankproject.demo.dto.CustRespProjection;
 import com.bankproject.demo.dto.CustomerDto;
 import com.bankproject.demo.dto.CustomerResponseDto;
 import com.bankproject.demo.exception.CustomerNotFoundException;
-import com.bankproject.demo.model.Customer;
 import com.bankproject.demo.service.CustomerService;
 
 @RestController
@@ -39,6 +35,7 @@ public class CustomerController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String displayRegistrationForm() {
 
+		System.out.println("customer information display");
 		return "customer information display";
 
 	}
@@ -54,9 +51,9 @@ public class CustomerController {
 	public List<CustRespProjection> getCustomerByName(
 			@NotEmpty(message = "name cannnot be empty") @RequestParam String custName) {
 		if (custName != null)
-			 return customerService.getCustomerByName(custName);
+			return customerService.getCustomerByName(custName);
 
-		//return (List<CustomerResponseDto>) customerService.getAllCustomerData();
+		// return (List<CustomerResponseDto>) customerService.getAllCustomerData();
 		return null;
 	}
 

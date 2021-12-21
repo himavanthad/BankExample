@@ -1,15 +1,11 @@
 package com.bankproject.demo.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.bankproject.demo.model.Customer;
-import com.bankproject.demo.model.Transaction;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(value={"handler", "hibernateLazyInitializer", "FieldHandler"})
-public class AccountResponseProjection implements Serializable  {
+@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer", "FieldHandler" })
+public class AccountResponseProjection implements Serializable {
 
 	/**
 	 * 
@@ -19,13 +15,13 @@ public class AccountResponseProjection implements Serializable  {
 	private Integer accountId;
 
 	private Long accountNumber;
-	
+
 	private double balance;
 
-	//private Customer customer;
-	
+	// private Customer customer;
+
 	public AccountResponseProjection() {
-		//super();
+		// super();
 	}
 
 	public AccountResponseProjection(Integer accountId, Long accountNumber, double balance) {

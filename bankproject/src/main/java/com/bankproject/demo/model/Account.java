@@ -11,16 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.ManyToAny;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -44,7 +37,7 @@ public class Account {
 	@JoinColumn(name = "customer_Id")
 	@JsonIgnoreProperties("account")
 	private Customer customer;
-	
+
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<Transaction> transaction = new ArrayList<Transaction>();
@@ -106,6 +99,5 @@ public class Account {
 	public void setTransaction(List<Transaction> transaction) {
 		this.transaction = transaction;
 	}
-
 
 }

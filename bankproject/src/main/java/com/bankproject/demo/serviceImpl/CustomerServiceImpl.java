@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,39 +17,46 @@ import com.bankproject.demo.model.Account;
 import com.bankproject.demo.model.Customer;
 import com.bankproject.demo.service.CustomerService;
 
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
-
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	CustomerDao customerDao;
 
-	public void addCustomer(CustomerDto customerDto) {
+	public Customer addCustomer(CustomerDto customerDto) {
 		Customer cust = new Customer();
 		BeanUtils.copyProperties(customerDto, cust);
 		List<Account> accounts = new ArrayList<Account>();
-		for(Account account: customerDto.getAccount())
-		{
+		/*
+		 * for(Account account: customerDto.getAccount()) { account.setCustomer(cust);
+		 * accounts.add(account); }
+		 */
+		customerDto.getAccount().stream().forEach(account -> {
 			account.setCustomer(cust);
 			accounts.add(account);
-		}
+		});
 		cust.setAccount(accounts);
-		//custom
-		customerDao.save(cust);
+		return customerDao.save(cust);
 	}
 
 	public List<CustomerResponseDto> getAllCustomerData() {
 		List<CustomerResponseDto> customerResponseList = new ArrayList<CustomerResponseDto>();
-		Iterator it = customerDao.findAll().iterator();
-		while (it.hasNext()) {
+		Iterable<Customer> findAll = customerDao.findAll();
+		/*
+		 * Iterator<Customer> it = findAll.iterator();
+		 * while (it.hasNext()) { CustomerResponseDto responseDto = new
+		 * CustomerResponseDto(); BeanUtils.copyProperties(it.next(), responseDto);
+		 * customerResponseList.add(responseDto);
+		 * 
+		 * }
+		 */
+		findAll.forEach(customer -> {
 			CustomerResponseDto responseDto = new CustomerResponseDto();
-			BeanUtils.copyProperties(it.next(), responseDto);
+			BeanUtils.copyProperties(customer, responseDto);
 			customerResponseList.add(responseDto);
+		});
 
-		}
 		return customerResponseList;
-
 	}
 
 	@Override
@@ -63,8 +68,8 @@ public class CustomerServiceImpl implements CustomerService {
 		 * CustomerResponseDto(); BeanUtils.copyProperties(customer, responseDto);
 		 * customerResponseList.add(responseDto); }
 		 */
-	
-		//return customerResponseList;
+
+		// return customerResponseList;
 		return customerList;
 	}
 

@@ -7,13 +7,15 @@ import com.bankproject.demo.dto.AccountRespClassProjection;
 import com.bankproject.demo.dto.AccountResponseDto;
 import com.bankproject.demo.dto.AccountResponseProjection;
 import com.bankproject.demo.exception.CustomerNotFoundException;
-import com.bankproject.demo.model.Account;
 
 public interface AccountService {
 
-	AccountResponseDto saveData(AccountDto accountDto) throws CustomerNotFoundException ;
-	AccountResponseDto getAccountById(Integer accountId) throws CustomerNotFoundException ;
+	AccountResponseDto saveData(AccountDto accountDto) throws CustomerNotFoundException;
+
+	AccountResponseDto getAccountById(Integer accountId) throws CustomerNotFoundException;
+
 	List<AccountResponseProjection> getAllAccounts();
+
 	AccountRespClassProjection getAccountByAccountNumber(Long accountNumber);
 
 }

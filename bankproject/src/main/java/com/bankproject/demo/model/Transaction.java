@@ -1,7 +1,6 @@
 package com.bankproject.demo.model;
 
 import java.util.Date;
-import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,30 +18,30 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name="transaction")
+@Table(name = "transaction")
 public class Transaction {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "transaction_id")
 	private Integer transactionId;
-	
+
 	@Column(name = "transaction_number")
 	private String transactionNumber;
-	
+
 	@Column(name = "transaction_amount")
-    private double transactionedAmount;
-	
+	private double transactionedAmount;
+
 	@Column(name = "transaction_type")
 	private String transactionType;
-	
+
 	@Column(name = "available_balance")
 	private Double availableBalance;
-	
+
 	@Column(name = "transaction_date")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date  transactionDate;
-	
+	private Date transactionDate;
+
 	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinColumn(name = "account_Id")
 	@JsonIgnoreProperties("transaction")
@@ -56,7 +55,6 @@ public class Transaction {
 		this.transactionId = transactionId;
 	}
 
-	
 	public String getTransactionNumber() {
 		return transactionNumber;
 	}
@@ -89,7 +87,6 @@ public class Transaction {
 		this.availableBalance = availableBalance;
 	}
 
-	
 	public Date getTransactionDate() {
 		return transactionDate;
 	}

@@ -1,7 +1,6 @@
 package com.bankproject.demo.dto;
 
 import java.sql.Date;
-import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,11 +9,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class TransactionDatesDto {
 
 	@NotNull(message = "provide from Date")
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-	private  Date fromDate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private Date fromDate;
 
 	@NotNull(message = "provide to Date")
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date toDate;
 
 	public Date getFromDate() {

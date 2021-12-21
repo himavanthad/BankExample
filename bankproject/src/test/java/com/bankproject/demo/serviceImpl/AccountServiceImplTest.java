@@ -1,6 +1,10 @@
 package com.bankproject.demo.serviceImpl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -14,9 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.bankproject.demo.dao.AccountDao;
 import com.bankproject.demo.dao.CustomerDao;
@@ -24,7 +25,6 @@ import com.bankproject.demo.dto.AccountDto;
 import com.bankproject.demo.dto.AccountRespClassProjection;
 import com.bankproject.demo.dto.AccountResponseDto;
 import com.bankproject.demo.dto.AccountResponseProjection;
-import com.bankproject.demo.exception.CustomerNotFoundException;
 import com.bankproject.demo.model.Account;
 import com.bankproject.demo.model.Customer;
 
@@ -62,50 +62,37 @@ class AccountServiceImplTest {
 		account.setAccountType("saving");
 		account.setBalance(1000);
 		account.setCustomer(customer);
-
 	}
 
-	// @Test(expected = CustomerNotFoundException.class)
+	@Test
 	void testSaveData() {
 
-		/*
-		 * when(customerDao.findById(Mockito.anyInt())).thenAnswer(i ->{ Customer
-		 * customer = new Customer(); customer.setCustName("Rama");
-		 * customer.setEmail("rama@gmail.com"); Optional<Customer> optional =
-		 * Optional.of(customer); return optional.get(); });
-		 */
-		when(accountDao.save(Mockito.any(Account.class))).thenAnswer(i -> {
-			Account account = new Account();
-			account.setAccountNumber(2323l);
-			account.setAccountType("saving");
-			account.setBalance(1000);
-			account.setCustomer(customer);
-			return account;
-		});
+		Customer customer = new Customer();
+		customer.setCustName("siva");
+		customer.setEmail("rama@gmail.com");
+		customer.setPhoneNo("432123344");
+		Optional<Customer> customerOption = Optional.of(customer);
+		when(customerDao.findById(Mockito.anyInt())).thenReturn(customerOption);
+		AccountResponseDto saveDataResult = accountServiceImpl.saveData(accountDto);
 
-		AccountResponseDto saveData = accountServiceImpl.saveData(accountDto);
-
-		assertNotNull(saveData);
-		assertEquals(2323l, saveData.getAccountNumber());
-
+		assertNotNull(saveDataResult);
+		verify(customerDao, times(1)).findById(Mockito.anyInt());
+		assertEquals(2323l, saveDataResult.getAccountNumber());
+		assertEquals(1000, saveDataResult.getBalance());
 	}
 
-	//@Test
+	@Test
 	void testGetAccountById() {
 
-		when(accountDao.findById(Mockito.anyInt())).thenAnswer(i -> {
-			Account account = new Account();
-			account.setAccountNumber(2323l);
-			account.setAccountType("saving");
-			account.setBalance(1000);
-			account.setCustomer(customer);
-			Optional<Account> optional = Optional.of(account);
-			return optional.get();
-		});
+		Optional<Account> accountOptional = Optional.of(account);
+		when(accountDao.findById(Mockito.anyInt())).thenReturn(accountOptional);
 
-		AccountResponseDto accountById = accountServiceImpl.getAccountById(1);
+		AccountResponseDto accountByIdResult = accountServiceImpl.getAccountById(1);
 
-		assertNotNull(accountById);
+		assertNotNull(accountByIdResult);
+		verify(accountDao, times(1)).findById(Mockito.anyInt());
+		assertEquals(2323l, accountByIdResult.getAccountNumber());
+		assertEquals(1000, accountByIdResult.getBalance());
 	}
 
 	@Test
@@ -116,33 +103,28 @@ class AccountServiceImplTest {
 		account.setAccountNumber(2323l);
 		account.setBalance(1000);
 		accountResponseProjections.add(account);
-		//((Mockito) accountResponseProjections).
 		when(accountDao.findAllAccounts()).thenReturn(accountResponseProjections);
-				
-				
-			/*	.thenAnswer(i -> {
-			//List<AccountResponseProjection> accountResponseProjections = new ArrayList<AccountResponseProjection>();
-			Account account = new Account();
-			account.setAccountNumber(2323l);
-			account.setAccountType("saving");
-			account.setBalance(1000);
-			account.setCustomer(customer);
-			accountResponseProjections.
-			return accountResponseProjections;
-		});*/
+
 		List<AccountResponseProjection> allAccounts = accountServiceImpl.getAllAccounts();
-		
+
 		assertNotNull(allAccounts);
-		assertTrue(allAccounts.size()>0);
-	
+		verify(accountDao, times(1)).findAllAccounts();
+		assertTrue(allAccounts.size() > 0);
+		assertEquals(2323l, allAccounts.get(0).getAccountNumber());
+		assertEquals(1000, allAccounts.get(0).getBalance());
+
 	}
 
 	@Test
 	void testGetAccountByAccountNumber() {
-		AccountRespClassProjection account = new AccountRespClassProjection(2323l, 1000, null, null, "saving");
+		AccountRespClassProjection account = new AccountRespClassProjection(2323l, 1000, null, "saving");
 		when(accountDao.findByAccountNumber(2323l)).thenReturn(account);
 		AccountRespClassProjection accounts = accountServiceImpl.getAccountByAccountNumber(2323l);
 		assertNotNull(accounts);
+		verify(accountDao, times(1)).findByAccountNumber(2323l);
+		assertEquals(2323l, accounts.getAccountNumber());
+		assertEquals(1000, accounts.getBalance());
+		assertEquals("saving", accounts.getAccountType());
 	}
 
 }

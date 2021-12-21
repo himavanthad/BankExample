@@ -9,22 +9,20 @@ import com.bankproject.demo.model.Transaction;
 public class AccountRespClassProjection {
 
 	private Long accountNumber;
-	
+
 	private double balance;
 
 	private Customer customer;
-	
+
 	private List<Transaction> transaction = new ArrayList<Transaction>();
 
 	private String accountType;
 
-	public AccountRespClassProjection(Long accountNumber, double balance, Customer customer,
-			List<com.bankproject.demo.model.Transaction> transaction, String accountType) {
-		//super();
+	public AccountRespClassProjection(Long accountNumber, double balance, Customer customer, String accountType) {
+		// super();
 		this.accountNumber = accountNumber;
 		this.balance = balance;
 		this.customer = customer;
-		this.transaction = transaction;
 		this.accountType = accountType;
 	}
 
@@ -67,5 +65,5 @@ public class AccountRespClassProjection {
 	public void setAccountType(String accountType) {
 		this.accountType = accountType;
 	}
-		
+
 }

@@ -1,6 +1,5 @@
 package com.bankproject.demo.dao;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -9,11 +8,8 @@ import javax.persistence.TemporalType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.Temporal;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.bankproject.demo.model.Account;
-import com.bankproject.demo.model.Customer;
 import com.bankproject.demo.model.Transaction;
 
 @Repository
@@ -29,7 +25,8 @@ public interface TransactionDao extends CrudRepository<Transaction, Long> {
 	 * 
 	 * @Param("endDate") LocalDateTime endDate);
 	 */
-	List<Transaction> findByTransactionDateBetween(@Temporal(TemporalType.DATE) Date startDate,@Temporal(TemporalType.DATE) Date endDate);
+	List<Transaction> findByTransactionDateBetween(@Temporal(TemporalType.DATE) Date startDate,
+			@Temporal(TemporalType.DATE) Date endDate);
 
 	/*
 	 * @Query("FROM Transaction u WHERE u.account_Id = :accountId")

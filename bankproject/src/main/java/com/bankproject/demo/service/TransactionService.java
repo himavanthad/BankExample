@@ -11,16 +11,9 @@ import com.bankproject.demo.exception.EntryNotFoundException;
 
 public interface TransactionService {
 
-	List<TransactionResponseDto> saveTransactions(@Valid TransactionDto transactionRequestDto) throws EntryNotFoundException;
+	List<TransactionResponseDto> saveTransactions(@Valid TransactionDto transactionRequestDto)
+			throws EntryNotFoundException;
 
 	List<TransactionResponseDto> getAllTransactionByFromAndToDates(Date from, Date to);
 
-	//List<TransactionResponseDto> getAllTransactionByAccountId(Integer accountId);
-
-
-//	void depositOperation(long accountNumber, double balance);
-//
-//	void debitOperation(long accountNumber, double balance);
-
 }
-

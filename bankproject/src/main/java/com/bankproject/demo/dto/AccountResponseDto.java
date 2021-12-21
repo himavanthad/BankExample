@@ -11,11 +11,11 @@ public class AccountResponseDto {
 	private Integer accountId;
 
 	private Long accountNumber;
-	
+
 	private double balance;
 
 	private Customer customer;
-	
+
 	private List<Transaction> Transaction = new ArrayList<Transaction>();
 
 	public Integer getAccountId() {
@@ -57,5 +57,5 @@ public class AccountResponseDto {
 	public void setTransaction(List<Transaction> transaction) {
 		Transaction = transaction;
 	}
-	
+
 }

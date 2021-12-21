@@ -1,8 +1,5 @@
 package com.bankproject.demo.dto;
 
-import java.sql.Date;
-import java.time.LocalDate;
-
 import javax.validation.constraints.NotNull;
 
 public class TransactionDto {
@@ -39,5 +36,5 @@ public class TransactionDto {
 	public void setToAccountId(Integer toAccountId) {
 		this.toAccountId = toAccountId;
 	}
-	
+
 }

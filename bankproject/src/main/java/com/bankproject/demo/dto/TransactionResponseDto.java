@@ -1,7 +1,6 @@
 package com.bankproject.demo.dto;
 
 import java.sql.Date;
-import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +16,7 @@ public class TransactionResponseDto {
 
 	@NotNull(message = "provide transaction date")
 	private Date transactionDate;
-	
+
 	private String transactionType;
 
 	@NotNull(message = "provide transaction number ")
@@ -30,11 +29,11 @@ public class TransactionResponseDto {
 	private Integer toAccountId;
 
 	@NotNull(message = "provide from Date")
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-	private  Date fromDate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private Date fromDate;
 
 	@NotNull(message = "provide to Date")
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date toDate;
 
 	public double getTransactionedAmount() {
